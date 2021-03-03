@@ -1,13 +1,19 @@
 package main
 
 import (
-"fmt"
+	"fmt"
+	"strings"
 )
 
-func repeatMe(words ...string)  {
-fmt.Println(words)
+func lenAndUpper(name string) (lenght int, uppercase string) {
+
+	lenght = len(name)
+	uppercase = strings.ToUpper(name)
+	defer fmt.Println("good")
+	return
 }
 
-func main(){
-	repeatMe("a","d","c","d")
+func main() {
+	totalLenght, up := lenAndUpper("nico")
+	fmt.Println(totalLenght, up)
 }
