@@ -1,27 +1,48 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"time"
+	"net/http"
 )
 
-func main() {
-	c := make(chan string) //채널 생성
+type requestResult struct {
+	url    string
+	status string
+}
 
-	people := [2]string{"a", "b"}
-	for _, person := range people {
-		go isSexy(person, c)
+var errRequstFailed = errors.New("err")
+
+func main() {
+	results := make(map[string]string)
+	c := make(chan requestResult)
+
+	urls := []string{
+		"https://www.naver.com",
+		"https://www.jajaja.com",
 	}
 
-	fmt.Println("Waiting for message ")
+	for _, url := range urls {
 
-	for i := 0; i < len(people); i++ {
-		fmt.Println("Received this message ", <-c)
+		go hitURL(url, c)
+	}
+
+	for i := 0; i < len(urls); i++ {
+		result := <-c
+		results[result.url] = result.status
+	}
+
+	for url, status := range results {
+		fmt.Println(url, status)
 	}
 
 }
 
-func isSexy(person string, c chan string) {
-	time.Sleep(time.Second * 10)
-	c <- person + " is sexy"
+func hitURL(url string, c chan<- requestResult) {
+	resp, err := http.Get(url)
+	status := "OK"
+	if err != nil || resp.StatusCode >= 400 {
+		status = "FAILED"
+	}
+	c <- requestResult{url: url, status: status}
 }
