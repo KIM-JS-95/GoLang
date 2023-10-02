@@ -18,6 +18,7 @@ class Episode extends StatelessWidget {
         "https://comic.naver.com/webtoon/detail?titleId=$webtoonId&no=${episode.id}");
   }
 
+  /// BuildContext: 위젯 간(부모요소)에 데이터를 전달하고 상호 작용하는 데 사용
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

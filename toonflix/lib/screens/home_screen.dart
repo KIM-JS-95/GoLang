@@ -4,6 +4,7 @@ import 'package:toonflix/widgets/webtoon_widget.dart';
 import '../models/webtoon_model.dart';
 import '../servides/Api_service.dart';
 
+
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
@@ -11,8 +12,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
+    return Scaffold( /// Flutter document: Implements the basic material design visual layout structure.
+      backgroundColor: Color.fromRGBO(30, 200, 0, 1),
 
       // 상단 타이틀
       appBar: AppBar(
@@ -27,16 +28,14 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
 
-      body: FutureBuilder(
+      body: FutureBuilder( /// async 내장되어 있음: Future 획득을 대기
         future: webtoons,
-        builder: (context, snapshot) {
+        builder: (context, snapshot) { /// snapshot: FutureBuilder가 받은 future의 상태
           if (snapshot.hasData) {
             return Column(
               children: [
-                const SizedBox(
-                  height: 50,
-                ),
-                Expanded(child: makeList(snapshot))
+                const SizedBox(height: 0),
+                Expanded(child: makeList(snapshot)) /// 획득한 데이터의 크기를 화면에 모두 담을 수 있도록 요소를 expanded
               ],
             );
           }
@@ -45,12 +44,15 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+
     );
   }
 
+  /// 메인 페이지 리스트 생성 : 획득한 리스트 정보를 출력
   ListView makeList(AsyncSnapshot<List<WebtoonModel>> snapshot) {
     return ListView.separated(
-      scrollDirection: Axis.horizontal,
+      /// scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       itemCount: snapshot.data!.length,
       padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
       itemBuilder: (context, index) {
