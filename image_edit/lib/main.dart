@@ -3,9 +3,15 @@ import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +31,8 @@ class MyApp extends StatelessWidget {
           backgroundColor: const Color(0xFFFDF5EC),
           canvasColor: const Color(0xFFFDF5EC),
           textTheme: TextTheme(
-            headline5: ThemeData.light()
+            headline5: ThemeData
+                .light()
                 .textTheme
                 .headline5!
                 .copyWith(color: const Color(0xFFBC764A)),
@@ -74,6 +81,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   XFile? _pickedFile;
   CroppedFile? _croppedFile;
+  GlobalKey _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +96,13 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.all(kIsWeb ? 24.0 : 16.0),
               child: Text(
                 widget.title,
-                style: Theme.of(context)
+                style: Theme
+                    .of(context)
                     .textTheme
                     .displayMedium!
-                    .copyWith(color: Theme.of(context).highlightColor),
+                    .copyWith(color: Theme
+                    .of(context)
+                    .highlightColor),
               ),
             ),
           Expanded(child: _body()),
@@ -133,8 +144,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _image() {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    final screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     if (_croppedFile != null) {
       final path = _croppedFile!.path;
       return ConstrainedBox(
@@ -181,7 +198,21 @@ class _HomePageState extends State<HomePage> {
               tooltip: 'Crop',
               child: const Icon(Icons.crop),
             ),
-          )
+          ),
+        if (_croppedFile != null)
+
+        /// 수정 후 저장 아이콘
+          Padding(
+            padding: const EdgeInsets.only(left: 32.0),
+            child: FloatingActionButton(
+              onPressed: () {
+                _saveImage(); /// 이미지 저장
+              },
+              backgroundColor: const Color(0xFFBC764A),
+              tooltip: 'Crop',
+              child: const Icon(Icons.save),
+            ),
+          ),
       ],
     );
   }
@@ -208,7 +239,10 @@ class _HomePageState extends State<HomePage> {
                     radius: const Radius.circular(12.0),
                     borderType: BorderType.RRect,
                     dashPattern: const [8, 4],
-                    color: Theme.of(context).highlightColor.withOpacity(0.4),
+                    color: Theme
+                        .of(context)
+                        .highlightColor
+                        .withOpacity(0.4),
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
@@ -216,24 +250,32 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Icon(
                             Icons.image,
-                            color: Theme.of(context).highlightColor,
+                            color: Theme
+                                .of(context)
+                                .highlightColor,
                             size: 80.0,
                           ),
                           const SizedBox(height: 24.0),
                           Text(
                             'Upload an image to start',
                             style: kIsWeb
-                                ? Theme.of(context)
+                                ? Theme
+                                .of(context)
                                 .textTheme
                                 .headline5!
                                 .copyWith(
-                                color: Theme.of(context).highlightColor)
-                                : Theme.of(context)
+                                color: Theme
+                                    .of(context)
+                                    .highlightColor)
+                                : Theme
+                                .of(context)
                                 .textTheme
                                 .bodyText2!
                                 .copyWith(
                                 color:
-                                Theme.of(context).highlightColor),
+                                Theme
+                                    .of(context)
+                                    .highlightColor),
                           )
                         ],
                       ),
@@ -306,10 +348,58 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _clear() {
-    setState(() {
-      _pickedFile = null;
-      _croppedFile = null;
-    });
+  Future<void> _saveImage() async {
+    final savedFile = await ImageGallerySaver.saveFile(_croppedFile!.path);
+    if (savedFile != null) {
+      /// 이미지 저장 성공
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Image saved successfully'),
+        action: SnackBarAction(
+          label: '서버로 전송!', // 액션 버튼의 텍스트
+          onPressed: () {
+            uploadImage(savedFile);
+          },
+        ),
+      ));
+    } else {
+      /// 이미지 저장 실패
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Image saved successfully'),
+        action: SnackBarAction(
+          label: '서버로 전송!', // 액션 버튼의 텍스트
+          onPressed: () {
+            _clear(); /// 초기화
+          },
+        ),
+      ));
+    }
   }
+
+  Future<void> uploadImage(Uint8List imageBytes) async {
+    final uri = Uri.parse('YOUR_UPLOAD_URL'); // Change to your server's upload URL.
+
+    final request = http.MultipartRequest('POST', uri)
+      ..files.add(http.MultipartFile.fromBytes(
+        'image', // Field name to be used on the server
+        imageBytes,
+        filename: 'image.jpg',
+      ));
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      // Upload successful
+      print('Image uploaded successfully');
+    } else {
+      // Upload failed
+      print('Failed to upload image');
+    }
+  }
+
+void _clear() {
+  setState(() {
+  _pickedFile = null;
+  _croppedFile = null;
+  });
+}
 }
