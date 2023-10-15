@@ -9,8 +9,9 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'dart:typed_data';
+import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -81,7 +82,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   XFile? _pickedFile;
   CroppedFile? _croppedFile;
-  GlobalKey _globalKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -350,6 +350,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _saveImage() async {
     final savedFile = await ImageGallerySaver.saveFile(_croppedFile!.path);
+
     if (savedFile != null) {
       /// 이미지 저장 성공
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -357,14 +358,14 @@ class _HomePageState extends State<HomePage> {
         action: SnackBarAction(
           label: '서버로 전송!', // 액션 버튼의 텍스트
           onPressed: () {
-            uploadImage(savedFile);
+            uploadImage();
           },
         ),
       ));
     } else {
       /// 이미지 저장 실패
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Image saved successfully'),
+        content: Text('Image saved failed'),
         action: SnackBarAction(
           label: '서버로 전송!', // 액션 버튼의 텍스트
           onPressed: () {
@@ -375,21 +376,15 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> uploadImage(Uint8List imageBytes) async {
-    final uri = Uri.parse('YOUR_UPLOAD_URL'); // Change to your server's upload URL.
-
-    final request = http.MultipartRequest('POST', uri)
-      ..files.add(http.MultipartFile.fromBytes(
-        'image', // Field name to be used on the server
-        imageBytes,
-        filename: 'image.jpg',
-      ));
-
+  Future<void> uploadImage() async {
+    final uri = Uri.parse('http://10.0.2.2:8080/flutter'); /// 안드로이드 로컬 혹스트는 127.0.0.1 이 아님
+    final request = http.MultipartRequest('POST', uri);
+    request.files.add(await http.MultipartFile.fromPath('image', _pickedFile!.path));
     final response = await request.send();
-
     if (response.statusCode == 200) {
       // Upload successful
-      print('Image uploaded successfully');
+      String responseBody = await response.stream.bytesToString();
+      print('Image uploaded successfully. Server response: $responseBody');
     } else {
       // Upload failed
       print('Failed to upload image');
