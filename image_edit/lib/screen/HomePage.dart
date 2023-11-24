@@ -1,66 +1,15 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
+import 'dart:io';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:image_edit/screen/HomePage.dart';
 
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          primarySwatch: Colors.blue,
-          highlightColor: const Color(0xFFD0996F),
-          backgroundColor: const Color(0xFFFDF5EC),
-          canvasColor: const Color(0xFFFDF5EC),
-          textTheme: TextTheme(
-            headline5: ThemeData
-                .light()
-                .textTheme
-                .headline5!
-                .copyWith(color: const Color(0xFFBC764A)),
-          ),
-          iconTheme: IconThemeData(
-            color: Colors.grey[600],
-          ),
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Color(0xFFBC764A),
-            centerTitle: false,
-            foregroundColor: Colors.white,
-            actionsIconTheme: IconThemeData(color: Colors.white),
-          ),
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith(
-                      (states) => const Color(0xFFBC764A)),
-            ),
-          ),
-          outlinedButtonTheme: OutlinedButtonThemeData(
-            style: ButtonStyle(
-              foregroundColor: MaterialStateColor.resolveWith(
-                    (states) => const Color(0xFFBC764A),
-              ),
-              side: MaterialStateBorderSide.resolveWith(
-                      (states) => const BorderSide(color: Color(0xFFBC764A))),
-            ),
-          )),
-      home: const HomePage(title: 'Image Cropper Demo'),
-    );
-  }
-}
-
-
-/*
 class HomePage extends StatefulWidget {
   final String title;
 
@@ -72,6 +21,7 @@ class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
+
 
 class _HomePageState extends State<HomePage> {
   XFile? _pickedFile;
@@ -385,12 +335,10 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-void _clear() {
-  setState(() {
-  _pickedFile = null;
-  _croppedFile = null;
-  });
+  void _clear() {
+    setState(() {
+      _pickedFile = null;
+      _croppedFile = null;
+    });
+  }
 }
-}
-
- */
