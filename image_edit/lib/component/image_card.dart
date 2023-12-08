@@ -48,7 +48,7 @@ class _image extends StatelessWidget {
           maxWidth: 0.8 * screenWidth,
           maxHeight: 0.7 * screenHeight,
         ),
-        child: kIsWeb ? Image.network(path) : Image.file(File(path)), /// 이거 어떻게 처리하지?
+        child: Image.network(path),
       );
     } else if (_pickedFile != null) {
       final path = _pickedFile!.path;
@@ -57,7 +57,7 @@ class _image extends StatelessWidget {
           maxWidth: 0.8 * screenWidth,
           maxHeight: 0.7 * screenHeight,
         ),
-        child: kIsWeb ? Image.network(path) : Image.file(File(path)), // Specify the correct File class
+        child: Image.network(path), // Specify the correct File class
       );
     } else {
       return const SizedBox.shrink();
