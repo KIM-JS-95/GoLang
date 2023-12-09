@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/component/ScheduleCard.dart';
 import 'package:schdulesapp/component/today_banner.dart';
-import 'package:schdulesapp/repository/schedule_repository.dart';
+import 'package:schdulesapp/ajax/schedule_repository.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../const/colors.dart';
@@ -15,8 +15,7 @@ class ListType extends StatefulWidget {
 }
 
 class _ListType extends State<ListType> {
-  final Future<List<ScheduleModel>> sList=SchesuleRepository.getSchedule();
-  final Future<int> schedulessize = SchesuleRepository.getSchedulesize();
+  final Future<int> schedulessize = ScheduleRepository.getSchedulesize();
 
   DateTime selectedDate = DateTime.utc(
     // ➋ 선택된 날짜를 관리할 변수
@@ -34,7 +33,7 @@ class _ListType extends State<ListType> {
           children: [
             Expanded(
               child: FutureBuilder(
-                future: sList,
+                future: ScheduleRepository.getSchedule(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();

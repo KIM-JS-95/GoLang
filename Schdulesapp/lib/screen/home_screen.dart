@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'FlightTicket.dart';
 import 'calender_type.dart';
 import '../const/colors.dart';
 import 'list_type.dart';
+
+/// 홈 화면에 인천공항 날씨 정보 보여주면 재미있겠지?
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -23,7 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center, // 세로 방향으로 중앙 정렬
             crossAxisAlignment: CrossAxisAlignment.stretch, // 가로 방향으로 중앙 정렬
             children: [
-              Padding( /// 달력 일정으로 확인
+              /// 달력 일정으로 확인
+              Padding(
                   padding: EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
                     onPressed: () {
@@ -45,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     child: Text("Check My Schedules"),
                   )),
-              Padding( /// 전체 일정 List
+
+              /// 전체 일정 List
+              Padding(
                   padding: EdgeInsets.only(top: 20.0),
                   child: ElevatedButton(
                     onPressed: () {
@@ -66,6 +72,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     child: Text("전체 일정"),
+                  )),
+
+              /// 상세보기 테스트
+              Padding(
+                  padding: EdgeInsets.only(top: 20.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FlightTicket(id: 1),
+                          fullscreenDialog: true,
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFFFF5000), // 버튼 배경 색상
+                      onPrimary: Colors.white, // 텍스트 색상
+                      padding: EdgeInsets.all(16.0), // 내부 여백
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0), // 버튼 테두리 모양
+                      ),
+                    ),
+                    child: Text("상세보기 테스트"),
                   ))
             ],
           ),

@@ -9,8 +9,8 @@ class Time extends StatefulWidget {
   final String? cntTo;
 
   const Time({
-    required this.stdL,
-    required this.stdB,
+    this.stdL,
+    this.stdB,
     this.cntFrom,
     this.cntTo,
     Key? key,

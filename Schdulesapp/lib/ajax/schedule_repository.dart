@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/services.dart';
 import 'package:schdulesapp/model/schedule_model.dart';
 
-class SchesuleRepository {
+class ScheduleRepository {
   static Future<List<ScheduleModel>> getSchedule() async {
     /*
     final resp = await Dio().get(
