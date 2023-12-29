@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:schdulesapp/screen/home_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:schdulesapp/utils/hard_coded_data.dart';
 
-void main() async{
+import 'main_pages/login_page.dart';
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting();
-  runApp(MaterialApp(
-    home: HomeScreen(),
-  ));
+void main() async {
+  HardCodedData.generateHardCodedData();
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'Flight Booking UI Concept',
+    home: LoginPage(),
+  );
 }
