@@ -1,12 +1,14 @@
 
 import 'package:flutter/material.dart';
 
+import '../../main_pages/add_flight_page_controller.dart';
 import '../../utils/r.dart';
 import 'custom_tab_bar_controller.dart';
 
 class CustomTabBar extends StatefulWidget {
   final Function(int)? onTabTap;
   final CustomTabBarController customTabBarController;
+
   const CustomTabBar({
     super.key,
     this.onTabTap,
@@ -17,9 +19,9 @@ class CustomTabBar extends StatefulWidget {
   State<CustomTabBar> createState() => _CustomTabBarState();
 }
 
-class _CustomTabBarState extends State<CustomTabBar>
-    with SingleTickerProviderStateMixin {
+class _CustomTabBarState extends State<CustomTabBar> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late AddFlightPageController addFlightPageController;
 
   @override
   void initState() {
@@ -49,12 +51,9 @@ class _CustomTabBarState extends State<CustomTabBar>
             labelColor: R.secondaryColor,
             unselectedLabelColor: R.tertiaryColor,
             splashFactory: NoSplash.splashFactory,
-            onTap: (value) =>
-                _tabController.index = _tabController.previousIndex,
             tabs: const [
               Tab(text: "날짜별",),
-              Tab(
-                text: "뭐넣지?",),
+              Tab(text: "전체",),
             ],
           ),
         ],

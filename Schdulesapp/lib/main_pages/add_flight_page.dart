@@ -1,10 +1,7 @@
-
 import 'package:flutter/material.dart';
 
 import '../sub_pages/available_flights_page.dart';
-import '../sub_pages/checkout_page.dart';
-import '../sub_pages/route_selection_page.dart';
-import '../sub_pages/seat_selection_page.dart';
+import '../sub_pages/flight_list_page.dart';
 import '../widgets/custom_tab_bar/custom_tab_bar.dart';
 import '../widgets/custom_tab_bar/custom_tab_bar_controller.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
@@ -13,10 +10,9 @@ import 'add_flight_page_controller.dart';
 
 class AddFlightPage extends StatefulWidget {
   final AddFlightPageController addFlightPageController;
-  final Function(bool)? isSingleTabSelectionCompleted;
+
   const AddFlightPage({
     super.key,
-    required this.isSingleTabSelectionCompleted,
     required this.addFlightPageController,
   });
 
@@ -35,36 +31,14 @@ class _AddFlightPageState extends State<AddFlightPage> {
     super.initState();
     _fadeInOutWidgetController = FadeInOutWidgetController();
 
-    _pages = [
-      AvailableFlightsPage(
-        isSelectionCompleted: (isCompleted, flight) {
-          widget.isSingleTabSelectionCompleted?.call(isCompleted);
-          _pages.add(
-            SeatSelectionPage(
-              isSelectionCompleted: (isCompleted, flight) {
-                widget.isSingleTabSelectionCompleted?.call(isCompleted);
-                _pages.add(
-                  CheckoutPage(
-                    flightData: flight,
-                    isSelectionCompleted: (isCompleted) =>
-                        widget.isSingleTabSelectionCompleted?.call(isCompleted),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    ];
+    _pages = [AvailableFlightsPage(), FlightListPage()];
 
     _pageNotifier = ValueNotifier(0);
     _customTabBarController = CustomTabBarController();
 
-    widget.addFlightPageController.customTabBarController =
-        _customTabBarController;
+    widget.addFlightPageController.customTabBarController = _customTabBarController;
     widget.addFlightPageController.pageNotifier = _pageNotifier;
-    widget.addFlightPageController.fadeInOutWidgetController =
-        _fadeInOutWidgetController;
+    widget.addFlightPageController.fadeInOutWidgetController = _fadeInOutWidgetController;
   }
 
   @override

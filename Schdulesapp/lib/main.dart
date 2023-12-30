@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:schdulesapp/utils/hard_coded_data.dart';
 
 import 'main_pages/login_page.dart';

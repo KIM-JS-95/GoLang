@@ -13,12 +13,25 @@ class AddFlightPageController {
       fadeInOutWidgetController.show();
       customTabBarController.nextTab();
       Future.delayed(
-        const Duration(milliseconds: 500),
-            () => pageNotifier.value = customTabBarController.currentIndex,
+        const Duration(milliseconds: 500), () => pageNotifier.value = customTabBarController.currentIndex,
       ).whenComplete(
             () {
           fadeInOutWidgetController.show();
         },
       );
     }
+
+
+  void clodeTab() {
+    fadeInOutWidgetController.show();
+    customTabBarController.closeTab();
+    Future.delayed(
+      const Duration(milliseconds: 500), () => pageNotifier.value = customTabBarController.currentIndex,
+    ).whenComplete(
+          () {
+        fadeInOutWidgetController.show();
+      },
+    );
+  }
+
 }

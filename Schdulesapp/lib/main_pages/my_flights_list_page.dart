@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
 import '../models/flight_data.dart';
-import '../utils/hard_coded_data.dart';
 import '../widgets/fading_item_list/fading_item_list.dart';
 import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import '../widgets/flights_list_item_widget.dart';
@@ -17,6 +16,7 @@ class MyFlightsListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("메인페이지");
     return FutureBuilder<List<FlightData>>(
       future: ScheduleRepository.generateMyFlights(),
       builder: (context, snapshot) {

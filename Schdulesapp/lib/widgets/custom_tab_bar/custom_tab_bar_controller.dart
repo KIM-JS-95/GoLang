@@ -21,4 +21,11 @@ class CustomTabBarController {
       tabController.animateTo(currentIndex - 1);
     }
   }
+
+  void closeTab() {
+    final currentIndex = tabController.index;
+    if (currentIndex > 0) {
+      tabController.animateTo(currentIndex - 1);
+    }
+  }
 }

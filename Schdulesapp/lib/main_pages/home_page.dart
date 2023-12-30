@@ -14,6 +14,7 @@ enum MainPageEnum { myFlights, addFlight }
 
 class HomePage extends StatefulWidget {
   final Animation routeTransitionValue;
+
   const HomePage({
     super.key,
     required this.routeTransitionValue,
@@ -63,24 +64,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _addFlightPageController = AddFlightPageController();
 
     pages = {
-      MainPageEnum.myFlights: MyFlightsListPage( /// 메인화면 스케쥴 리스트
+      MainPageEnum.myFlights: MyFlightsListPage(
+        /// 메인화면 스케쥴 리스트
         fadingItemListController: _fadingItemListController,
       ),
-      MainPageEnum.addFlight: AddFlightPage( /// 하단 팝업버튼
-        isSingleTabSelectionCompleted: (isCompleted) {
-          isCompleted
-              ? _snakeButtonController.show()
-              : _snakeButtonController.hide(from: 0.3);
-        },
+      MainPageEnum.addFlight: AddFlightPage(
         addFlightPageController: _addFlightPageController,
       ),
     };
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
-        floatingActionButton: _buildFloatingButton(), // Adjust as needed
+  Widget build(BuildContext context) => Scaffold(
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            _buildFloatingButton(), // Your existing FloatingActionButton
+          ],
+        ),
         body: SafeArea(
           bottom: false,
           child: Column(
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: _buildHeader, /// 사람 아이콘
+                child: _buildHeader,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -149,23 +150,31 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Icon(
-                Icons.menu,
-                color: R.primaryColor,
-              ),
-              Container(
-                height: 40.0,
-                width: 40.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.0),
+              GestureDetector(
+                onTap: () {
+                  // Handle menu icon tap
+                },
+                child: Icon(
+                  Icons.menu,
                   color: R.primaryColor,
                 ),
-                child: Icon(
-                  Icons.person,
-                  color: R.secondaryColor,
-                  size: 40.0,
+              ),
+              GestureDetector(
+                onTap: () {homeButton();},
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: R.primaryColor,
+                  ),
+                  child: Icon(
+                    Icons.home,
+                    color: R.secondaryColor,
+                    size: 40.0,
+                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -175,11 +184,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: R.primaryColor, /// 배경색
+          color: R.primaryColor,
+
+          /// 배경색
           borderRadius: const BorderRadius.vertical(
-            top: Radius.circular(20),
-            bottom: Radius.circular(20)
-          ),
+              top: Radius.circular(20), bottom: Radius.circular(20)),
         ),
         child: FadeInOutWidget(
           slideDuration: const Duration(milliseconds: 500),
@@ -205,9 +214,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         valueListenable: _currentMainPage,
         builder: (_, value, __) => Align(
           child: Icon(
-          value == MainPageEnum.myFlights ? Icons.add : Icons.arrow_forward_ios,
-          color: R.primaryColor,
-        ),
+            value == MainPageEnum.myFlights
+                ? Icons.add
+                : Icons.arrow_forward_ios,
+            color: R.primaryColor,
+          ),
         ),
       ),
     );
@@ -219,15 +230,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       snakeWidth: 2.0,
       borderRadius: 20.0,
       child: SizedBox(
-        height: 70,
-        width: 70,
+        height: 50,
+        width: 50,
         child: elevatedButton,
       ),
     );
   }
 
+  void homeButton() {
+      _sheetContentFadeInOutController.hide();
+      _headerFadeInOutController.hide();
+      Future.delayed(const Duration(milliseconds: 500), () {
+        _currentMainPage.value = MainPageEnum.myFlights;
+      }).whenComplete(() {
+        _sheetContentFadeInOutController.show();
+        _headerFadeInOutController.show();
+      });
+      //_addFlightPageController.nextTab();
+  }
+
   void _onMainButtonClick() {
-    _snakeButtonController.hide(from: 0.3);
+    //_snakeButtonController.hide(from: 0.3);
     if (_isMyFlightsPage) {
       _sheetContentFadeInOutController.hide();
       _headerFadeInOutController.hide();

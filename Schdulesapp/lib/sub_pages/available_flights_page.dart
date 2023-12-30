@@ -11,10 +11,9 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class AvailableFlightsPage extends StatefulWidget {
-  final Function(bool, FlightData)? isSelectionCompleted;
+
   const AvailableFlightsPage({
     super.key,
-    this.isSelectionCompleted,
   });
 
   @override
@@ -34,6 +33,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   @override
   void initState() {
     super.initState();
+    print("달력페이지");
     _fadingItemListController = FadingItemListController();
     _selectedFlight = ValueNotifier<int>(0);
   }
@@ -48,7 +48,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   Widget build(BuildContext context) => Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      DaysCalendarWidget(onDayPressed: (DateTime selectedDay) {
+      DaysCalendarWidget(onDayPressed: (DateTime selectedDay) { /// 달력 위젯
         setState(() {this.selectedDate = selectedDay;});
         _fadingItemListController.showItems();
       }),
@@ -84,7 +84,6 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
 
   Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay) async {
     FlightData flightData = await ScheduleRepository.availableFlight(itemIndex);
-
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: R.tertiaryColor.withOpacity(0.5),
@@ -95,9 +94,6 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
       ),
       onPressed: () {
         _selectedFlight.value = flightData.id;
-        widget.isSelectionCompleted?.call(
-          true, flightData,
-        );
       },
       child: FlightsListItemWidget(
         flightData: flightData,

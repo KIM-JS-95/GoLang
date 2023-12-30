@@ -5,7 +5,6 @@ import '../utils/r.dart';
 
 class FlightsListItemWidget extends StatelessWidget {
   final FlightData flightData;
-
   const FlightsListItemWidget({
     Key? key,
     required this.flightData,
@@ -80,7 +79,6 @@ class FlightsListItemWidget extends StatelessWidget {
           ),
         ],
       );
-
   Widget _buildRightColumn() => Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -119,7 +117,6 @@ class FlightsListItemWidget extends StatelessWidget {
           ),
         ],
       );
-
   Widget _buildMiddlePart() => Column(
         children: [
           Icon(

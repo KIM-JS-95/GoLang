@@ -29,6 +29,8 @@ class _FadingItemListState extends State<FadingItemList>
   }
 
   void _initValues() {
+    final controllers = <AnimationController>[];
+
     for (int i = 0; i < widget.listItems.length; i++) {
       final itemAnimContr = AnimationController(
         vsync: this,
@@ -39,26 +41,28 @@ class _FadingItemListState extends State<FadingItemList>
         itemAnimContr,
       );
 
-      widget.fadingItemListController.controllers =
-          _listItemsMap.values.map((e) => e.animationController).toList();
+      controllers.add(itemAnimContr);
     }
+
+    widget.fadingItemListController.controllers = controllers.toList();
   }
+
 
   @override
   Widget build(BuildContext context) => Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          ListView.builder(
-            itemCount: _listItemsMap.length,
-            itemBuilder: (ctx, i) => _listItemsMap[i]!.widget,
-          ),
-        ],
-      );
+    alignment: Alignment.bottomCenter,
+    children: [
+      ListView.builder(
+        itemCount: _listItemsMap.length,
+        itemBuilder: (ctx, i) => _listItemsMap[i]!.widget,
+      ),
+    ],
+  );
 
   Widget _buildAnimatedListItem(
-    Widget listItem,
-    AnimationController controller,
-  ) =>
+      Widget listItem,
+      AnimationController controller,
+      ) =>
       AnimatedBuilder(
         animation: controller,
         builder: (ctx, child) => Opacity(

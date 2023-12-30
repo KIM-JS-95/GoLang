@@ -39,8 +39,7 @@ class ScheduleRepository {
 
 
 
-  static List<FlightData> generateFlightsData(
-      int cnt, List<ScheduleModel> s_list) {
+  static List<FlightData> generateFlightsData(int cnt, List<ScheduleModel> s_list) {
     return List.generate(
       cnt,
       (index) => FlightData(
