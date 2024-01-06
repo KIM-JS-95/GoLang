@@ -1,51 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:schdulesapp/ajax/schedule_repository.dart';
-
-import '../models/flight_data.dart';
-import '../sub_pages/route_selection_page.dart';
-import '../widgets/custom_option_selector.dart';
-import '../widgets/days_calendar_widget.dart';
+import '../models/TextFieldData.dart';
 import 'r.dart';
 
 class HardCodedData {
   static late final List<TextFieldData> _loginPageFieldsData;
   static late final List<TextFieldData> _routePageFieldsData;
-  static late final List<CustomOptionSelectorData> _checkoutPagePaymentOptions;
-  static late final List<CustomOptionSelectorData> _routePageRouteOptions;
+
 
   static List<TextFieldData> get loginPageFieldsData => _loginPageFieldsData;
   static List<TextFieldData> get routePageFieldsData => _routePageFieldsData;
 
-  static List<CustomOptionSelectorData> get routePageRouteOptions =>
-      _routePageRouteOptions;
-  static List<CustomOptionSelectorData> get checkoutPagePaymentOptions =>
-      _checkoutPagePaymentOptions;
-
   static generateHardCodedData() {
-    _generateRoutePageRouteOptions();
     _generateLoginPageFieldsData();
     _generateRoutePageFieldsData();
   }
 
-  static _generateRoutePageRouteOptions() => _routePageRouteOptions = [
-    CustomOptionSelectorData(
-      text: "One way",
-      id: "0",
-      leftBorder: false,
-      topBorder: false,
-    ),
-    CustomOptionSelectorData(
-      text: "Roundtrip",
-      id: "1",
-      topBorder: false,
-    ),
-    CustomOptionSelectorData(
-      text: "Multiple",
-      id: "2",
-      topBorder: false,
-      rightBorder: false,
-    )
-  ];
 
   static Future<void> _generateLoginPageFieldsData() async {
     _loginPageFieldsData = [

@@ -1,5 +1,11 @@
+/*
+ title: FlightListPage.class
+ contents: 한달간의 모든 일정을 리스트로 노출
+*/
+
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
+import 'package:schdulesapp/sub_pages/today_flight.dart';
 
 import '../models/flight_data.dart';
 import '../utils/r.dart';
@@ -15,13 +21,12 @@ class FlightListPage extends StatefulWidget {
 }
 
 class _FlightListPageState extends State<FlightListPage> {
-  late List<FlightData> flightData;
+  late List<FlightData> flightDatas;
 
   @override
   void initState() {
     super.initState();
-    print("전체페이지");
-    flightData = []; // Initialize flightData as an empty list
+    flightDatas = []; // Initialize flightData as an empty list
     _loadFlightData();
   }
 
@@ -29,7 +34,7 @@ class _FlightListPageState extends State<FlightListPage> {
     try {
       final data = await ScheduleRepository.generateMyFlights();
       setState(() {
-        flightData = data;
+        flightDatas = data;
       });
     } catch (error) {
       // Handle error
@@ -43,7 +48,7 @@ class _FlightListPageState extends State<FlightListPage> {
     children: [
       Expanded(
         child: ListView.builder(
-          itemCount: flightData.length,
+          itemCount: flightDatas.length,
           itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
@@ -54,9 +59,9 @@ class _FlightListPageState extends State<FlightListPage> {
                   side: BorderSide(color: R.tertiaryColor),
                 ),
               ),
-              onPressed: () {},
+              onPressed: () {TodayFlight(flightData:flightDatas[index]);},
               child: FlightsListItemWidget(
-                flightData: flightData[index],
+                flightData: flightDatas[index],
               ),
             ),
           ),

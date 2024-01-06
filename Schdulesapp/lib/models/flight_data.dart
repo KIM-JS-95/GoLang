@@ -5,11 +5,15 @@ class FlightData {
   final String destinationShort;
   final String destination;
   final String flightNumber;
-  final String duration;
-  final String time;
-  final String time2;
+  final String stdl;
+  final String stdb;
   final int id;
-  final String? activity;
+  final String activity;
+  final String ci;
+  final String co;
+
+  final String stal;
+  final String stab;
 
   FlightData({
     required this.departureShort,
@@ -18,11 +22,14 @@ class FlightData {
     required this.destinationShort,
     required this.destination,
     required this.flightNumber,
-    required this.duration,
-    required this.time,
-    required this.time2,
+    required this.stdl,
+    required this.stdb,
+    required this.stal,
+    required this.stab,
     required this.id,
-    this.activity,
+    required this.activity,
+    required this.co,
+    required this.ci
   });
 
   FlightData copyWith({
@@ -33,10 +40,12 @@ class FlightData {
     String? destination,
     String? flightNumber,
     String? duration,
-    String? time,
-    String? time2,
+    String? stdl,
+    String? stdb,
     int? id,
     String? activity,
+    String? ci,
+    String? co
   }) =>
       FlightData(
         departureShort: departureShort ?? this.departureShort,
@@ -45,10 +54,13 @@ class FlightData {
         destinationShort: destinationShort ?? this.destinationShort,
         destination: destination ?? this.destination,
         flightNumber: flightNumber ?? this.flightNumber,
-        duration: duration ?? this.duration,
-        time: time ?? this.time,
-        time2: time2 ?? this.time2,
+        stdl: stdl ?? this.stdl,
+        stdb: stdb ?? this.stdb,
+        stal: stal ?? this.stal,
+        stab: stab ?? this.stab,
         id: id ?? this.id,
         activity: activity ?? this.activity,
+        ci: ci ?? this.ci,
+        co: co ?? this.co,
       );
 }

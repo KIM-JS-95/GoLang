@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/hard_coded_data.dart';
 import '../utils/r.dart';
-import '../widgets/custom_flutter_logo.dart';
+import '../utils/custom_flutter_logo.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget_controller.dart';

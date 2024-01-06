@@ -1,4 +1,8 @@
-
+/*
+* title: AvailableFlightsPage.class
+* contents: 달력 선택시 해당 날짜의 일정 노출
+*
+* */
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
@@ -11,7 +15,6 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class AvailableFlightsPage extends StatefulWidget {
-
   const AvailableFlightsPage({
     super.key,
   });

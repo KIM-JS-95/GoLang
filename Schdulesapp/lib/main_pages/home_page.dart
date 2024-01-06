@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:snake_button/snake_button.dart';
 
+import '../models/MainPageEnum.dart';
 import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget_controller.dart';
 import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import 'add_flight_page_controller.dart';
 import 'add_flight_page.dart';
-import 'my_flights_list_page.dart';
-
-enum MainPageEnum { myFlights, addFlight }
+import 'home_flight_page.dart';
 
 class HomePage extends StatefulWidget {
   final Animation routeTransitionValue;
@@ -26,7 +25,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final AnimationController _sheetAnimationController;
-  late final SnakeButtonController _snakeButtonController;
   late final FadingItemListController _fadingItemListController;
   late final AddFlightPageController _addFlightPageController;
   late final FadeInOutWidgetController _sheetContentFadeInOutController;
@@ -41,7 +39,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void _initControllers() {
-    _snakeButtonController = SnakeButtonController();
     _fadingItemListController = FadingItemListController();
     _sheetContentFadeInOutController = FadeInOutWidgetController();
     _headerFadeInOutController = FadeInOutWidgetController();
@@ -56,7 +53,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       () {
         _headerFadeInOutController.show();
         _fadingItemListController.showItems();
-        _snakeButtonController.toggle();
       },
     );
 
@@ -64,13 +60,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _addFlightPageController = AddFlightPageController();
 
     pages = {
-      MainPageEnum.myFlights: MyFlightsListPage(
-        /// 메인화면 스케쥴 리스트
-        fadingItemListController: _fadingItemListController,
-      ),
-      MainPageEnum.addFlight: AddFlightPage(
-        addFlightPageController: _addFlightPageController,
-      ),
+      MainPageEnum.myFlights: HomeFlightPage(), /// 메인페이지 금일 일정 && 날씨
+      MainPageEnum.addFlight: AddFlightPage(addFlightPageController: _addFlightPageController), /// 팝업 페이지 관리 페이지 [날짜별 / 전체 / ...]
     };
   }
 
@@ -79,7 +70,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _buildFloatingButton(), // Your existing FloatingActionButton
+            _buildFloatingButton(),
           ],
         ),
         body: SafeArea(
@@ -99,9 +90,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   fadeInOutWidgetController: _headerFadeInOutController,
                   child: ValueListenableBuilder<MainPageEnum>(
                     valueListenable: _currentMainPage,
-                    builder: (_, value, __) => _isMyFlightsPage
-                        ? _myFlightsTextWidget
-                        : _addFlightTextWidget,
+                    builder: (_, value, __) => _isMyFlightsPage ? _myFlightsTextWidget : _addFlightTextWidget,
                   ),
                 ),
               ),
@@ -116,9 +105,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               Flexible(
                 child: _buildBottomSheet,
-              ),
-              const SizedBox(
-                height: 20.0,
               ),
             ],
           ),
@@ -185,8 +171,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         width: double.infinity,
         decoration: BoxDecoration(
           color: R.primaryColor,
-
-          /// 배경색
           borderRadius: const BorderRadius.vertical(
               top: Radius.circular(20), bottom: Radius.circular(20)),
         ),
@@ -201,12 +185,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       );
 
+  /// 하단 우측 버튼
   Widget _buildFloatingButton() {
     final elevatedButton = ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: R.secondaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
       onPressed: () => _onMainButtonClick(),
@@ -222,21 +207,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       ),
     );
-
-    return SnakeButton(
-      controller: _snakeButtonController,
-      snakeAnimationDuration: const Duration(milliseconds: 500),
-      snakeColor: R.secondaryColor,
-      snakeWidth: 2.0,
-      borderRadius: 20.0,
-      child: SizedBox(
-        height: 50,
-        width: 50,
-        child: elevatedButton,
-      ),
+    return SizedBox(
+      height: 50,
+      width: 50,
+      child: elevatedButton,
     );
   }
 
+  /// 메인으로 이동하는 버튼
   void homeButton() {
       _sheetContentFadeInOutController.hide();
       _headerFadeInOutController.hide();
@@ -249,6 +227,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       //_addFlightPageController.nextTab();
   }
 
+  /// 클릭시 동작기능
   void _onMainButtonClick() {
     //_snakeButtonController.hide(from: 0.3);
     if (_isMyFlightsPage) {

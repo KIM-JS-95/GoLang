@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../main_pages/add_flight_page_controller.dart';
@@ -19,9 +18,9 @@ class CustomTabBar extends StatefulWidget {
   State<CustomTabBar> createState() => _CustomTabBarState();
 }
 
-class _CustomTabBarState extends State<CustomTabBar> with SingleTickerProviderStateMixin {
+class _CustomTabBarState extends State<CustomTabBar>
+    with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  late AddFlightPageController addFlightPageController;
 
   @override
   void initState() {
@@ -32,30 +31,39 @@ class _CustomTabBarState extends State<CustomTabBar> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) => Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Positioned(
-            bottom: 1.0,
-            child: Container(
-              height: 0.5,
-              width: 500,
-              color: R.tertiaryColor,
-            ),
+    alignment: Alignment.bottomCenter,
+    children: [
+      Positioned(
+        bottom: 1.0,
+        child: Container(
+          height: 0.5,
+          width: 500,
+          color: R.tertiaryColor,
+        ),
+      ),
+      TabBar(
+        controller: _tabController,
+        isScrollable: false,
+        indicatorColor: R.secondaryColor,
+        indicatorPadding: const EdgeInsets.symmetric(horizontal: 24.0),
+        indicatorWeight: 3.0,
+        labelColor: R.secondaryColor,
+        unselectedLabelColor: R.tertiaryColor,
+        splashFactory: NoSplash.splashFactory,
+        onTap: (_) {
+          // 클릭 기능을 제거하기 위해 아무 동작도 하지 않음
+        },
+        tabs: const [
+          Tab(
+            text: "날짜별",
           ),
-          TabBar(
-            controller: _tabController,
-            isScrollable: false,
-            indicatorColor: R.secondaryColor,
-            indicatorPadding: const EdgeInsets.symmetric(horizontal: 24.0),
-            indicatorWeight: 3.0,
-            labelColor: R.secondaryColor,
-            unselectedLabelColor: R.tertiaryColor,
-            splashFactory: NoSplash.splashFactory,
-            tabs: const [
-              Tab(text: "날짜별",),
-              Tab(text: "전체",),
-            ],
+          Tab(
+            text: "전체",
           ),
         ],
-      );
+      ),
+    ],
+  );
 }
+
+
