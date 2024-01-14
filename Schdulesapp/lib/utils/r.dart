@@ -8,4 +8,7 @@ class R {
   static Color get primaryColor => _primaryColor;
   static Color get secondaryColor => _secondaryColor;
   static Color get tertiaryColor => _tertiaryColor;
+
+  static const back_addr = 'http://10.0.2.2:8080';
+
 }

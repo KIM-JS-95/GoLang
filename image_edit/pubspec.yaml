@@ -35,7 +35,7 @@ dependencies:
   image_cropper: ^3.0.0
   dotted_border: ^2.0.0+2
   image_picker: ^0.8.5+3
-  image_gallery_saver: '^2.0.3'
+  image_gallery_saver: ^2.0.3
   http: ^0.13.3  # 버전은 최신 버전에 맞게 설정
 
 dev_dependencies:

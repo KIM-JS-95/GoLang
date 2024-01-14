@@ -20,3 +20,10 @@ samples, guidance on mobile development, and a full API reference.
 # TODO
 - 비행코드 입력 (ex. GMP / 김포공항)
 - api 방식으로 전환하기
+
+|mathod|request|response|content|
+|:--:|:---:|:---:|:---:|
+|getScheduleOne()|| ScheduleModel ||
+|getTodaySchdule()|| ScheduleModel | 메인 페이지 금일 일정 가져오기 |
+|generateMyFlights()|| ScheduleModel ||
+|availableFlight()| DateTime selectedDay | ScheduleModel |날짜 선택시 보여지는 일정|

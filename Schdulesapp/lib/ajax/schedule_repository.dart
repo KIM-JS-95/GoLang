@@ -2,33 +2,34 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import '../models/flight_data.dart';
 import '../models/schedule_model.dart';
+import '../utils/r.dart';
+import 'package:http/http.dart' as http;
 
 class ScheduleRepository {
+
   static Future<List> getJsonSchedule() async {
     String jsonString = await rootBundle.loadString('assets/json/test.json');
     List<dynamic> jsonList = json.decode(jsonString);
     return jsonList;
   }
 
-  /// get> 날짜로 수정하기
-  static Future<ScheduleModel> getScheduleOne(int index) async {
-    //String jsonString = await rootBundle.loadString('assets/json/test.json');
-    //List<dynamic> jsonList = json.decode(jsonString);
-
-    List<dynamic> jsonList = await getJsonSchedule();
-    List<ScheduleModel> scheduleList =
-        jsonList.map((json) => ScheduleModel.fromJson(json)).toList();
-    return scheduleList[index];
-  }
 
   /// 메인페이지 금일 일정 가져오기
   static Future<FlightData> getTodaySchdule() async {
-    // String jsonString = await rootBundle.loadString('assets/json/test.json');
-    // List<dynamic> jsonList = json.decode(jsonString);
+    final uri = Uri.parse('$R.back_addr/getschedule');
+    /// 안드로이드 로컬 호스트는 127.0.0.1 이 아님
+    final request = http.MultipartRequest('POST', uri);
+    final response = await request.send();
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      print('Image uploaded successfully. Server response: $responseBody');
+    } else {
+      // Upload failed
+      print('Failed to upload image');
+    }
 
     List<dynamic> jsonList = await getJsonSchedule();
-    ScheduleModel s =
-        jsonList.map((json) => ScheduleModel.fromJson(json)).toList()[1];
+    ScheduleModel s = jsonList.map((json) => ScheduleModel.fromJson(json)).toList()[1];
     return FlightData(
         departureShort: s.cntFrom.toString(),
         departure: "김포공항",
@@ -59,8 +60,7 @@ class ScheduleRepository {
   }
 
   /// 일정 객체 오버라이드 ScheduleModel.dart -> FlightData.dart
-  static List<FlightData> generateFlightsData(
-      int cnt, List<ScheduleModel> s_list) {
+  static List<FlightData> generateFlightsData(int cnt, List<ScheduleModel> s_list) {
     return List.generate(
       cnt,
       (index) => FlightData(
@@ -82,9 +82,21 @@ class ScheduleRepository {
     );
   }
 
+
+  /// get> 날짜로 수정하기
+  static Future<ScheduleModel> getScheduleOne(DateTime selectedDay) async {
+    //String jsonString = await rootBundle.loadString('assets/json/test.json');
+    //List<dynamic> jsonList = json.decode(jsonString);
+
+    List<dynamic> jsonList = await getJsonSchedule();
+    List<ScheduleModel> scheduleList = jsonList.map((json) => ScheduleModel.fromJson(json)).toList();
+
+    return scheduleList[index];
+  }
+
   /// 날짜 선택시 보여지는 일정
-  static Future<FlightData> availableFlight(int index) async {
-    ScheduleModel s = await getScheduleOne(index);
+  static Future<FlightData> availableFlight(DateTime selectedDay) async {
+    ScheduleModel s = await getScheduleOne(selectedDay);
     return FlightData(
         id: s.id,
         departureShort: s.cntFrom.toString(),
@@ -102,19 +114,4 @@ class ScheduleRepository {
         co: s.co.toString());
   }
 
-/*
-  static Future<List<ScheduleModel>> getSchedules() async {
-    String jsonString = await rootBundle.loadString('assets/json/test.json');
-    List<dynamic> jsonList = json.decode(jsonString);
-    List<ScheduleModel> scheduleList = jsonList.map((json) => ScheduleModel.fromJson(json)).toList();
-    return scheduleList;
-  }
-
-  static Future<int> getSchedulesize() async {
-    String jsonString = await rootBundle.loadString('assets/json/test.json');
-    List<dynamic> jsonList = json.decode(jsonString);
-    int size = jsonList.length;
-    return size;
-  }
-*/
 }

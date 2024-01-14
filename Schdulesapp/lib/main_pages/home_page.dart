@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:snake_button/snake_button.dart';
 
+import '../component/MyApp.dart';
 import '../models/MainPageEnum.dart';
 import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
@@ -138,7 +138,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             children: [
               GestureDetector(
                 onTap: () {
-                  // Handle menu icon tap
+                  print("123");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyApp()),
+                  );
                 },
                 child: Icon(
                   Icons.menu,

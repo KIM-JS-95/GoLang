@@ -86,7 +86,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
 
 
   Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay) async {
-    FlightData flightData = await ScheduleRepository.availableFlight(itemIndex);
+    FlightData flightData = await ScheduleRepository.availableFlight(selectedDay);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: R.tertiaryColor.withOpacity(0.5),

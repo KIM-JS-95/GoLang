@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  http: ^0.13.3  # 버전은 최신 버전에 맞게 설정
   table_calendar: 3.0.9
   intl: 0.18.1
   drift: 2.13.0
@@ -41,9 +42,12 @@ dependencies:
   dio: 5.3.3
   provider: 6.0.5
   uuid: 4.1.0
-  snake_button: ^0.0.4
-  weather: ^3.1.1
+  weather: ^3.0.0
+  dotted_border: ^2.0.0+2
 
+  image_picker: ^0.8.5+3
+  image_cropper: ^3.0.0
+  image_gallery_saver: ^2.0.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
