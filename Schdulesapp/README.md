@@ -25,7 +25,7 @@ samples, guidance on mobile development, and a full API reference.
 |:--:|:---:|:---:|:---:|
 | getScheduleByDate() | DateTime selectedDay | List<ScheduleModel> | 특정일 데이터 가져오기 & 메인 페이지 금일 일정 가져오기 |
 | getAllSchedules() | . | List<ScheduleModel> | 모든 일정 가져오기 |
-
+| uploadajax() | MultipartFile | ? | 이미지 전송 |
 ## getAllSchedules
 - url: /show-schedule
 ### Request

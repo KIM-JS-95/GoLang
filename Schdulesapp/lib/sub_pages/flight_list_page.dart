@@ -4,20 +4,21 @@
 */
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 import 'package:schdulesapp/sub_pages/today_flight.dart';
 
 import '../models/User.dart';
+import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class FlightListPage extends StatefulWidget {
-  final User user;
+
 
   const FlightListPage({
     Key? key,
-    required this.user,
   }) : super(key: key);
 
   @override
@@ -35,8 +36,9 @@ class _FlightListPageState extends State<FlightListPage> {
   }
 
   Future<void> _loadFlightData() async {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     try {
-      final data = await ScheduleRepository.getAllSchedules(widget.user.auth);
+      final data = await ScheduleRepository.getAllSchedules(userProvider.user.auth);
       setState(() {
         flightDatas = data;
       });
@@ -64,9 +66,10 @@ class _FlightListPageState extends State<FlightListPage> {
                     ),
                   ),
                   onPressed: () {
-                    TodayFlight(flightData: flightDatas, user: widget.user);},
+                    TodayFlight(flightData: flightDatas[index]);
+                    }, /// 리스트 클릭시 뷰 페이지로 이동
                   child: FlightsListItemWidget(
-                      flightData: flightDatas[index], user: widget.user),
+                      flightData: flightDatas[index]),
                 ),
               ),
             ),

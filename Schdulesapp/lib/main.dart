@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:schdulesapp/utils/hard_coded_data.dart';
 
 import 'main_pages/login_page.dart';
+import 'models/UserProvider.dart';
 
 void main() async {
   HardCodedData.generateHardCodedData();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Flight Booking UI Concept',
-    home: LoginPage(),
-  );
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => UserProvider(),
+      child: MaterialApp(
+        title: 'Flight Booking UI Concept',
+        home: LoginPage(),
+      ),
+    );
+  }
 }

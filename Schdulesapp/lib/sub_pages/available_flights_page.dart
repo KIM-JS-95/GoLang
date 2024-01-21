@@ -4,9 +4,11 @@
 *
 * */
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
 import '../models/User.dart';
+import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../utils/hard_coded_data.dart';
 import '../utils/r.dart';
@@ -16,9 +18,9 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class AvailableFlightsPage extends StatefulWidget {
-  final User user;
+
   const AvailableFlightsPage({
-    super.key,required this.user
+    super.key,
   });
 
   @override
@@ -28,6 +30,7 @@ class AvailableFlightsPage extends StatefulWidget {
 class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   late final FadingItemListController _fadingItemListController;
   late ValueNotifier<int> _selectedFlight;
+
   DateTime selectedDate = DateTime.utc(
     // ➋ 선택된 날짜를 관리할 변수
     DateTime.now().year,
@@ -67,7 +70,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
                 (index) => Padding(
               padding: const EdgeInsets.all(10.0),
               child: FutureBuilder<Widget>(
-                future: buildFlightCard(index,selectedDate, widget.user),
+                future: buildFlightCard(index,selectedDate),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -86,8 +89,9 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   );
 
 
-  Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay, User user) async {
-    List<FlightData> flightDataList  = await ScheduleRepository.getScheduleByDate(selectedDay, user.auth);
+  Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay) async {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+    List<FlightData> flightDataList  = await ScheduleRepository.getScheduleByDate(selectedDay, userProvider.user.auth);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: R.tertiaryColor.withOpacity(0.5),
@@ -101,7 +105,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
       },
       child: Column(
         children: flightDataList.map((flightData) {
-        return FlightsListItemWidget(flightData: flightData,user:widget.user);
+        return FlightsListItemWidget(flightData: flightData);
       }).toList(),
       )
     );

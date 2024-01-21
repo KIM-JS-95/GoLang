@@ -12,14 +12,12 @@ import '../utils/r.dart';
 
 class TodayFlight extends StatelessWidget {
   final Function(bool)? isSelectionCompleted;
-  final List<FlightData> flightData;
-  final User user;
+  final FlightData flightData;
 
   const TodayFlight({
     super.key,
     required this.flightData,
     this.isSelectionCompleted,
-    required this.user,
   });
 
   @override
@@ -40,7 +38,7 @@ class TodayFlight extends StatelessWidget {
         const SizedBox(height: 5.0),
         Divider(color: R.secondaryColor,),
         const SizedBox(height: 5.0),
-        WeatherWidget(city:flightData.destinationShort),
+        WeatherWidget(city: flightData.destinationShort),
       ],
     ),
   );

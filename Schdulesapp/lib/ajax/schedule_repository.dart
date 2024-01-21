@@ -1,26 +1,22 @@
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../models/schedule_model.dart';
 import '../utils/r.dart';
 import 'package:http/http.dart' as http;
 
 class ScheduleRepository {
-  /// json 파일 가져오기
-  static Future<List> getJsonSchedule() async {
-    String jsonString = await rootBundle.loadString('assets/json/test.json');
-    List<dynamic> jsonList = json.decode(jsonString);
-    return jsonList;
-  }
 
   /// 일정 리스트
-  static Future<List<FlightData>> getAllSchedules(String Authorization) async {
+  static Future<List<FlightData>> getAllSchedules(String auth) async {
     final response = await http.post(
       Uri.parse('$R.back_addr/show-schedule'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': Authorization
+        'Authorization': auth
       },
     );
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:schdulesapp/sub_pages/view_flight_page.dart';
 
 import '../main_pages/home_page.dart';
 import '../models/MainPageEnum.dart';
 import '../models/User.dart';
+import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
@@ -12,10 +14,10 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 
 class ViewFlight extends StatefulWidget {
   final FlightData flightData;
-  final User user;
+
   const ViewFlight({
     Key? key,
-    required this.flightData, required this.user,
+    required this.flightData,
   }) : super(key: key);
 
   @override
@@ -57,7 +59,8 @@ class _ViewFlightState extends State<ViewFlight> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) {
+    return Scaffold(
     body: SafeArea(
       bottom: false,
       child: Column(
@@ -94,7 +97,7 @@ class _ViewFlightState extends State<ViewFlight> with TickerProviderStateMixin {
         ],
       ),
     ),
-  );
+  );}
 
   Text get _myFlightsTextWidget => Text(
     "My flight",
@@ -127,7 +130,7 @@ class _ViewFlightState extends State<ViewFlight> with TickerProviderStateMixin {
               PageRouteBuilder(
                 transitionDuration: const Duration(milliseconds: 500),
                 pageBuilder: (context, animation, secondaryAnimation) =>
-                    HomePage(routeTransitionValue: animation, user: widget.user),
+                    HomePage(routeTransitionValue: animation),
               ),
             ),
           );
@@ -163,7 +166,7 @@ class _ViewFlightState extends State<ViewFlight> with TickerProviderStateMixin {
       fadeInOutWidgetController: _sheetContentFadeInOutController,
       child: ValueListenableBuilder<MainPageEnum>(
         valueListenable: _currentMainPage,
-        builder: (_, value, __) => ViewFlightPage(flightData:widget.flightData, user:widget.user)!,
+        builder: (_, value, __) => ViewFlightPage(flightData:widget.flightData)!,
       ),
     ),
   );

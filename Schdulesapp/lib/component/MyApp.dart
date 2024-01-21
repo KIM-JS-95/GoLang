@@ -5,19 +5,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:schdulesapp/main_pages/home_page.dart';
 
 import '../ajax/upload_ajax.dart';
 import '../models/User.dart';
+import '../models/UserProvider.dart';
 import '../utils/r.dart';
 
 
 class MyApp extends StatelessWidget {
-  final User user;
 
   const MyApp({
     Key? key, // Correct declaration of key parameter
-    required this.user,
   }) : super(key: key); // Correct way to pass the key parameter to the superclass
 
   // This widget is the root of your application.
@@ -62,19 +62,17 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(background: const Color(0xFFFDF5EC))),
-      home: ImageCrop(title: 'Image Cropper Demo', user:user),
+      home: ImageCrop(title: 'Image Cropper Demo'),
     );
   }
 }
 
 class ImageCrop extends StatefulWidget {
   final String title;
-  final User user;
 
   const ImageCrop({
     Key? key,
     required this.title,
-    required this.user,
   }) : super(key: key);
 
   @override
@@ -87,6 +85,7 @@ class _ImageCropState extends State<ImageCrop> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: !kIsWeb ? AppBar(title: Text(widget.title)) : null,
       body: Column(
@@ -102,7 +101,7 @@ class _ImageCropState extends State<ImageCrop> {
                   PageRouteBuilder(
                     transitionDuration: const Duration(milliseconds: 500),
                     pageBuilder: (context, animation, secondaryAnimation) =>
-                        HomePage(routeTransitionValue: animation, user: widget.user),
+                        HomePage(routeTransitionValue: animation),
                   ),
                 ),
               );
@@ -197,6 +196,7 @@ class _ImageCropState extends State<ImageCrop> {
   }
 
   Widget _menu() {
+    UserProvider userProvider = Provider.of<UserProvider>(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -224,8 +224,8 @@ class _ImageCropState extends State<ImageCrop> {
           Padding(
             padding: const EdgeInsets.only(left: 32.0),
             child: FloatingActionButton(
-              onPressed: () {
-                Uploadajax(); ///  이미지 서버로 전송
+              onPressed: () async {
+                XFile? uploadedImage = await Uploadajax.uploadajax(userProvider.user); /// 이거 리턴 어떤 타임으로?
               },
               backgroundColor: const Color(0xFFBC764A),
               tooltip: 'Save',

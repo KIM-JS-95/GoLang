@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../component/MyApp.dart';
 import '../models/MainPageEnum.dart';
-import '../models/User.dart';
+import '../models/UserProvider.dart';
 import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget_controller.dart';
@@ -14,12 +15,10 @@ import 'home_flight_page.dart';
 
 class HomePage extends StatefulWidget {
   final Animation routeTransitionValue;
-  final User user;
 
   const HomePage({
     super.key,
     required this.routeTransitionValue,
-    required this.user,
   });
 
   @override
@@ -47,29 +46,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _headerFadeInOutController = FadeInOutWidgetController();
     _sheetAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(
-        milliseconds: 600,
-      ),
+      duration: const Duration(milliseconds: 600),
     );
 
     _sheetAnimationController.forward().whenComplete(
-      () {
+          () {
         _headerFadeInOutController.show();
         _fadingItemListController.showItems();
       },
     );
 
+    UserProvider userProvider = Provider.of<UserProvider>(context);
+
     _currentMainPage = ValueNotifier(MainPageEnum.myFlights);
     _addFlightPageController = AddFlightPageController();
 
     pages = {
-      MainPageEnum.myFlights: HomeFlightPage(user: widget.user),
-
-      /// 메인페이지 금일 일정 && 날씨
-      MainPageEnum.addFlight: AddFlightPage(
-          addFlightPageController: _addFlightPageController, user: widget.user),
-
-      /// 팝업 페이지 관리 페이지 [날짜별 / 전체 / ...]
+      MainPageEnum.myFlights: HomeFlightPage(user: userProvider.user),
+      MainPageEnum.addFlight: AddFlightPage(addFlightPageController: _addFlightPageController),
     };
   }
 
@@ -140,8 +134,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
 
   Widget get _buildHeader => AnimatedBuilder(
-        animation: widget.routeTransitionValue,
-        builder: (context, child) => Opacity(
+      animation: widget.routeTransitionValue,
+      builder: (context, child) {
+        return Opacity(
           opacity: 1.0 * widget.routeTransitionValue.value,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -152,7 +147,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MyApp(user: widget.user)),
+                        builder: (context) => MyApp()),
                   );
                 },
                 child: Icon(
@@ -180,8 +175,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
             ],
           ),
-        ),
-      );
+        );
+      });
 
   Widget get _buildBottomSheet => Container(
         height: double.infinity,

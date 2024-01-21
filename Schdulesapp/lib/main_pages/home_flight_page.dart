@@ -26,6 +26,7 @@ class _HomeFlightPage extends State<HomeFlightPage>{
     DateTime.now().day,
   );
 
+  /// 좌우 슬라이드로 당일 일전 표시하기
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<FlightData>>(
@@ -38,10 +39,11 @@ class _HomeFlightPage extends State<HomeFlightPage>{
           // 에러 발생 시에 보여줄 UI
           return Text('Error: ${snapshot.error}');
         } else {
-          /*
-          * 출력부분을 전체로 today_flight.dart 페이지 빌려주기
-          * */
-          return TodayFlight(flightData: snapshot.data!);
+          return snapshot.hasData
+              ? Column(
+            children: snapshot.data!.map((e) => TodayFlight(flightData: e!)).toList(),
+          )
+              : const Text('No flight data available');
         }
       },
     );
