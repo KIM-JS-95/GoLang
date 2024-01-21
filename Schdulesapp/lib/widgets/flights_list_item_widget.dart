@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/sub_pages/view_flight.dart';
 
+import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 
 class FlightsListItemWidget extends StatelessWidget {
   final FlightData flightData;
+  final User user;
 
   const FlightsListItemWidget({
     Key? key,
-    required this.flightData,
+    required this.flightData, required this.user,
   }) : super(key: key);
 
   @override
@@ -18,7 +20,7 @@ class FlightsListItemWidget extends StatelessWidget {
       // Navigate to the target page on tap
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ViewFlight(flightData:flightData,)),
+        MaterialPageRoute(builder: (context) => ViewFlight(flightData:flightData,user:user)),
       );
     },
     child: Padding(

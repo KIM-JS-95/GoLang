@@ -8,11 +8,17 @@ import 'package:image_picker/image_picker.dart';
 import 'package:schdulesapp/main_pages/home_page.dart';
 
 import '../ajax/upload_ajax.dart';
+import '../models/User.dart';
 import '../utils/r.dart';
 
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final User user;
+
+  const MyApp({
+    Key? key, // Correct declaration of key parameter
+    required this.user,
+  }) : super(key: key); // Correct way to pass the key parameter to the superclass
 
   // This widget is the root of your application.
   @override
@@ -56,17 +62,19 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(background: const Color(0xFFFDF5EC))),
-      home: const ImageCrop(title: 'Image Cropper Demo'),
+      home: ImageCrop(title: 'Image Cropper Demo', user:user),
     );
   }
 }
 
 class ImageCrop extends StatefulWidget {
   final String title;
+  final User user;
 
   const ImageCrop({
     Key? key,
     required this.title,
+    required this.user,
   }) : super(key: key);
 
   @override
@@ -94,9 +102,7 @@ class _ImageCropState extends State<ImageCrop> {
                   PageRouteBuilder(
                     transitionDuration: const Duration(milliseconds: 500),
                     pageBuilder: (context, animation, secondaryAnimation) =>
-                        HomePage(
-                          routeTransitionValue: animation,
-                        ),
+                        HomePage(routeTransitionValue: animation, user: widget.user),
                   ),
                 ),
               );

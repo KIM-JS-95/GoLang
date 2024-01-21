@@ -12,7 +12,7 @@ class HardCodedData {
 
   static generateHardCodedData() {
     _generateLoginPageFieldsData();
-    _generateRoutePageFieldsData();
+    //_generateRoutePageFieldsData();
   }
 
 
@@ -25,7 +25,7 @@ class HardCodedData {
         ),
         "이메일",
         TextEditingController(),
-        "hello@world.io",
+        "001200",
       ),
       TextFieldData(
         Icon(
@@ -34,10 +34,11 @@ class HardCodedData {
         ),
         "비밀번호",
         TextEditingController(),
-        "random123",
+        "123",
       ),
     ];
   }
+
 
   static _generateRoutePageFieldsData() => _routePageFieldsData = [
         TextFieldData(
@@ -86,4 +87,5 @@ class HardCodedData {
           "Economy",
         ),
       ];
+
 }

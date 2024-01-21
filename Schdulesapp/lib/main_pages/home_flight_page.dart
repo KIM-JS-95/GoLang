@@ -2,13 +2,15 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
+import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../sub_pages/today_flight.dart';
-import '../widgets/fading_item_list/fading_item_list_controller.dart';
 
 class HomeFlightPage extends StatefulWidget {
+  final User user;
   const HomeFlightPage({
     super.key,
+    required this.user,
   });
 
   @override
@@ -17,7 +19,6 @@ class HomeFlightPage extends StatefulWidget {
 }
 
 class _HomeFlightPage extends State<HomeFlightPage>{
-  late final FadingItemListController fadingItemListController;
   DateTime selectedDate = DateTime.utc(
     // ➋ 선택된 날짜를 관리할 변수
     DateTime.now().year,
@@ -27,9 +28,8 @@ class _HomeFlightPage extends State<HomeFlightPage>{
 
   @override
   Widget build(BuildContext context) {
-    print("메인페이지");
-    return FutureBuilder<FlightData>(
-      future: ScheduleRepository.getTodaySchdule(),
+    return FutureBuilder<List<FlightData>>(
+      future: ScheduleRepository.getScheduleByDate(selectedDate, widget.user.auth),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 데이터 로딩 중인 경우에 보여줄 UI

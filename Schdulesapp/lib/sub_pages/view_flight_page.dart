@@ -3,15 +3,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
+import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 import '../widgets/fading_item_list/fading_item_list_controller.dart';
 
 class ViewFlightPage extends StatefulWidget {
   final FlightData flightData;
+  final User user;
   const ViewFlightPage({
     required this.flightData,
-    super.key,
+    super.key, required this.user,
   });
 
   @override
@@ -21,12 +23,11 @@ class ViewFlightPage extends StatefulWidget {
 
 class _HomeFlightPage extends State<ViewFlightPage>{
   late final FadingItemListController fadingItemListController;
-
+  DateTime currentDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    print("메인페이지");
-    return FutureBuilder<FlightData>(
-      future: ScheduleRepository.getTodaySchdule(),
+    return FutureBuilder<List<FlightData>>(
+      future: ScheduleRepository.getScheduleByDate(currentDate, widget.user.auth),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 데이터 로딩 중인 경우에 보여줄 UI
@@ -35,9 +36,6 @@ class _HomeFlightPage extends State<ViewFlightPage>{
           // 에러 발생 시에 보여줄 UI
           return Text('Error: ${snapshot.error}');
         } else {
-          /*
-          * 출력부분을 전체로 today_flight.dart 페이지 빌려주기
-          * */
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 32.0),
             child: Column(

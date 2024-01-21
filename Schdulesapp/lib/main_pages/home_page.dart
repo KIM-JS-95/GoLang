@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../component/MyApp.dart';
 import '../models/MainPageEnum.dart';
+import '../models/User.dart';
 import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget_controller.dart';
@@ -13,10 +14,12 @@ import 'home_flight_page.dart';
 
 class HomePage extends StatefulWidget {
   final Animation routeTransitionValue;
+  final User user;
 
   const HomePage({
     super.key,
     required this.routeTransitionValue,
+    required this.user,
   });
 
   @override
@@ -60,8 +63,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _addFlightPageController = AddFlightPageController();
 
     pages = {
-      MainPageEnum.myFlights: HomeFlightPage(), /// 메인페이지 금일 일정 && 날씨
-      MainPageEnum.addFlight: AddFlightPage(addFlightPageController: _addFlightPageController), /// 팝업 페이지 관리 페이지 [날짜별 / 전체 / ...]
+      MainPageEnum.myFlights: HomeFlightPage(user: widget.user),
+
+      /// 메인페이지 금일 일정 && 날씨
+      MainPageEnum.addFlight: AddFlightPage(
+          addFlightPageController: _addFlightPageController, user: widget.user),
+
+      /// 팝업 페이지 관리 페이지 [날짜별 / 전체 / ...]
     };
   }
 
@@ -90,7 +98,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   fadeInOutWidgetController: _headerFadeInOutController,
                   child: ValueListenableBuilder<MainPageEnum>(
                     valueListenable: _currentMainPage,
-                    builder: (_, value, __) => _isMyFlightsPage ? _myFlightsTextWidget : _addFlightTextWidget,
+                    builder: (_, value, __) => _isMyFlightsPage
+                        ? _myFlightsTextWidget
+                        : _addFlightTextWidget,
                   ),
                 ),
               ),
@@ -141,7 +151,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   print("123");
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyApp()),
+                    MaterialPageRoute(
+                        builder: (context) => MyApp(user: widget.user)),
                   );
                 },
                 child: Icon(
@@ -150,7 +161,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
               ),
               GestureDetector(
-                onTap: () {homeButton();},
+                onTap: () {
+                  homeButton();
+                },
                 child: Container(
                   height: 40.0,
                   width: 40.0,
@@ -220,15 +233,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   /// 메인으로 이동하는 버튼
   void homeButton() {
-      _sheetContentFadeInOutController.hide();
-      _headerFadeInOutController.hide();
-      Future.delayed(const Duration(milliseconds: 500), () {
-        _currentMainPage.value = MainPageEnum.myFlights;
-      }).whenComplete(() {
-        _sheetContentFadeInOutController.show();
-        _headerFadeInOutController.show();
-      });
-      //_addFlightPageController.nextTab();
+    _sheetContentFadeInOutController.hide();
+    _headerFadeInOutController.hide();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _currentMainPage.value = MainPageEnum.myFlights;
+    }).whenComplete(() {
+      _sheetContentFadeInOutController.show();
+      _headerFadeInOutController.show();
+    });
+    //_addFlightPageController.nextTab();
   }
 
   /// 클릭시 동작기능

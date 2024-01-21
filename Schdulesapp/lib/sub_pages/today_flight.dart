@@ -6,16 +6,20 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/widgets/weather_widget.dart';
 
+import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 
 class TodayFlight extends StatelessWidget {
   final Function(bool)? isSelectionCompleted;
-  final FlightData flightData;
+  final List<FlightData> flightData;
+  final User user;
+
   const TodayFlight({
     super.key,
     required this.flightData,
     this.isSelectionCompleted,
+    required this.user,
   });
 
   @override

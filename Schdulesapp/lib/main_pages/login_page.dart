@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
 
+import '../ajax/user_repository.dart';
+import '../models/User.dart';
 import '../utils/hard_coded_data.dart';
 import '../utils/r.dart';
 import '../utils/custom_flutter_logo.dart';
@@ -12,6 +13,7 @@ import 'home_page.dart';
 class LoginPage extends StatelessWidget {
   final FadeInOutWidgetController _fadeInOutWidgetController =
       FadeInOutWidgetController();
+
   LoginPage({super.key});
 
   @override
@@ -74,7 +76,6 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildPasswordField() {
     final passwordFieldData = HardCodedData.loginPageFieldsData[0];
-
     return CustomTextField(
       controller: passwordFieldData.controller,
       labelText: passwordFieldData.label,
@@ -96,21 +97,42 @@ class LoginPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
           ),
         ),
-        onPressed: () {
-          _fadeInOutWidgetController.hide();
-          Future.delayed(
-            const Duration(milliseconds: 500),
-            () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                transitionDuration: const Duration(milliseconds: 500),
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    HomePage(
-                  routeTransitionValue: animation,
+        onPressed: () async {
+          // 사용자가 입력한 아이디와 패스워드를 가져오기
+          String userid = HardCodedData.loginPageFieldsData[0].controller.text;
+          String password = HardCodedData.loginPageFieldsData[1].controller.text;
+
+          // User 객체 생성
+          User user = User(userid: userid, password: password);
+
+          // 로그인 API 호출
+          Map<String, dynamic> loginResult = await UserRepository.login(user);
+
+          // 로그인 성공 여부 확인
+          if (loginResult['success']) {
+            user.auth=loginResult['token'];
+            // 로그인 성공 시 홈 화면으로 이동
+            _fadeInOutWidgetController.hide();
+            Future.delayed(
+              const Duration(milliseconds: 500),
+              () => Navigator.push(
+                context,
+                PageRouteBuilder(
+                  transitionDuration: const Duration(milliseconds: 500),
+                  pageBuilder: (context, animation, secondaryAnimation) =>
+                      HomePage(routeTransitionValue: animation,user: user),
                 ),
               ),
-            ),
-          );
+            );
+          } else {
+            // 로그인 실패 시 사용자에게 알림
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(loginResult['message']),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
         },
         child: Text(
           "Login",

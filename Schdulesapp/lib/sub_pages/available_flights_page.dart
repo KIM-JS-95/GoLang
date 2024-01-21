@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
+import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../utils/hard_coded_data.dart';
 import '../utils/r.dart';
@@ -15,8 +16,9 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class AvailableFlightsPage extends StatefulWidget {
+  final User user;
   const AvailableFlightsPage({
-    super.key,
+    super.key,required this.user
   });
 
   @override
@@ -36,7 +38,6 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   @override
   void initState() {
     super.initState();
-    print("달력페이지");
     _fadingItemListController = FadingItemListController();
     _selectedFlight = ValueNotifier<int>(0);
   }
@@ -66,7 +67,7 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
                 (index) => Padding(
               padding: const EdgeInsets.all(10.0),
               child: FutureBuilder<Widget>(
-                future: buildFlightCard(index,selectedDate),
+                future: buildFlightCard(index,selectedDate, widget.user),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
@@ -85,8 +86,8 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
   );
 
 
-  Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay) async {
-    FlightData flightData = await ScheduleRepository.availableFlight(selectedDay);
+  Future<Widget> buildFlightCard(int itemIndex, DateTime selectedDay, User user) async {
+    List<FlightData> flightDataList  = await ScheduleRepository.getScheduleByDate(selectedDay, user.auth);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: R.tertiaryColor.withOpacity(0.5),
@@ -96,12 +97,13 @@ class _AvailableFlightsPageState extends State<AvailableFlightsPage> {
         ),
       ),
       onPressed: () {
-        _selectedFlight.value = flightData.id;
+        //_selectedFlight.value = flightData.id;
       },
-      child: FlightsListItemWidget(
-        flightData: flightData,
-      ),
+      child: Column(
+        children: flightDataList.map((flightData) {
+        return FlightsListItemWidget(flightData: flightData,user:widget.user);
+      }).toList(),
+      )
     );
   }
-
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../models/User.dart';
 import '../sub_pages/available_flights_page.dart';
 import '../sub_pages/flight_list_page.dart';
 import '../widgets/custom_tab_bar/custom_tab_bar.dart';
@@ -10,10 +11,12 @@ import 'add_flight_page_controller.dart';
 
 class AddFlightPage extends StatefulWidget {
   final AddFlightPageController addFlightPageController;
+  final User user;
 
   const AddFlightPage({
     super.key,
     required this.addFlightPageController,
+    required this.user,
   });
 
   @override
@@ -31,7 +34,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     super.initState();
     _fadeInOutWidgetController = FadeInOutWidgetController();
 
-    _pages = [AvailableFlightsPage(), FlightListPage()];
+    _pages = [AvailableFlightsPage(user: widget.user), FlightListPage(user: widget.user)];
 
     _pageNotifier = ValueNotifier(0);
     _customTabBarController = CustomTabBarController();
