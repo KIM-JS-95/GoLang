@@ -1,14 +1,13 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
-import '../models/User.dart';
 import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 import '../widgets/fading_item_list/fading_item_list_controller.dart';
+import '../widgets/weather_widget.dart';
 
 class ViewFlightPage extends StatefulWidget {
   final FlightData flightData;
@@ -19,13 +18,14 @@ class ViewFlightPage extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _HomeFlightPage();
+  State<StatefulWidget> createState() => _ViewFlightPage();
 
 }
 
-class _HomeFlightPage extends State<ViewFlightPage>{
+class _ViewFlightPage extends State<ViewFlightPage> {
   late final FadingItemListController fadingItemListController;
   DateTime currentDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     UserProvider userProvider = Provider.of<UserProvider>(context);
@@ -34,29 +34,32 @@ class _HomeFlightPage extends State<ViewFlightPage>{
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // 데이터 로딩 중인 경우에 보여줄 UI
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           // 에러 발생 시에 보여줄 UI
           return Text('Error: ${snapshot.error}');
         } else {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 15.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    _buildFirstColumn(),
-                    _buildSecondColumn("flight_takeoff"),
-                    _buildThirdColumn(),
-                  ],
-                ),
-                const SizedBox(height: 10.0),
-                Divider(color: R.secondaryColor,),
-                const SizedBox(height: 10.0),
-              ],
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 15.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      _buildFirstColumn(),
+                      _buildSecondColumn("flight_takeoff"),
+                      _buildThirdColumn(),
+                    ],
+                  ),
+                  const SizedBox(height: 10.0),
+                  Divider(color: R.secondaryColor),
+                  const SizedBox(height: 10.0),
+                  WeatherWidget(lat: widget.flightData.lat, lon: widget.flightData.lon),
+                ],
+              ),
             ),
           );
         }
@@ -65,7 +68,6 @@ class _HomeFlightPage extends State<ViewFlightPage>{
   }
 
   Widget _buildFirstColumn() {
-    print("페이지 호출!");
     final firstColumn = [
       Text(widget.flightData.departureShort,
         style: TextStyle(
@@ -136,17 +138,22 @@ class _HomeFlightPage extends State<ViewFlightPage>{
   }
 
   Widget _buildSecondColumn(String statue) {
-    final firstColumn = [ /// 출발도착 아이콘
+    final firstColumn = [
+
+      /// 출발도착 아이콘
       Icon(
-        (statue=="flight_takeoff") ? Icons.flight_takeoff : Icons.flight_land,
+        (statue == "flight_takeoff") ? Icons.flight_takeoff : Icons.flight_land,
         color: R.secondaryColor,
         size: 32.0,
       ),
 
       const SizedBox(height: 8.0),
 
-      Text(widget.flightData.flightNumber, /// Pairing
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold,),
+      Text(widget.flightData.flightNumber,
+
+        /// Pairing
+        style: const TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold,),
       ),
     ];
     final secondColumn = [

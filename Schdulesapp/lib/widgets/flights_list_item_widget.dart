@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/sub_pages/view_flight.dart';
 
-import '../models/User.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 

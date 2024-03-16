@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 
@@ -8,6 +7,7 @@ import '../sub_pages/today_flight.dart';
 
 class HomeFlightPage extends StatefulWidget {
   final User user;
+
   const HomeFlightPage({
     super.key,
     required this.user,
@@ -15,10 +15,9 @@ class HomeFlightPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() => _HomeFlightPage();
-
 }
 
-class _HomeFlightPage extends State<HomeFlightPage>{
+class _HomeFlightPage extends State<HomeFlightPage> {
   DateTime selectedDate = DateTime.utc(
     // ➋ 선택된 날짜를 관리할 변수
     DateTime.now().year,
@@ -30,20 +29,28 @@ class _HomeFlightPage extends State<HomeFlightPage>{
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<FlightData>>(
-      future: ScheduleRepository.getScheduleByDate(selectedDate, widget.user.auth),
+      future: ScheduleRepository.gettodayschedule(widget.user.auth),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          // 데이터 로딩 중인 경우에 보여줄 UI
-          return CircularProgressIndicator();
+          // Show UI when data is loading
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         } else if (snapshot.hasError) {
-          // 에러 발생 시에 보여줄 UI
+          // Show UI when an error occurs
           return Text('Error: ${snapshot.error}');
         } else {
-          return snapshot.hasData
-              ? Column(
-            children: snapshot.data!.map((e) => TodayFlight(flightData: e!)).toList(),
-          )
-              : const Text('No flight data available');
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) =>
+                  TodayFlight(flightData: snapshot.data![index]),
+            );
+          } else {
+            return Center(
+              child: Text('No flight data available!'),
+            );
+          }
         }
       },
     );

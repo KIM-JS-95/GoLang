@@ -103,14 +103,15 @@ class LoginPage extends StatelessWidget {
           // 사용자가 입력한 아이디와 패스워드를 가져오기
           String userid = HardCodedData.loginPageFieldsData[0].controller.text;
           String password = HardCodedData.loginPageFieldsData[1].controller.text;
-          User user = User(userid: userid, password: password);
 
+          User user = User(userid: "001200", password: "123"); /// 테스트
           Map<String, dynamic> loginResult = await UserRepository.login(user);
 
           // 로그인 성공 여부 확인
           if (loginResult['success']) {
             user.auth=loginResult['token'];
-            final userProvider = Provider.of<UserProvider>(context);
+
+            final userProvider = Provider.of<UserProvider>(context, listen: false);
             userProvider.setUser(user);
 
             // 로그인 성공 시 홈 화면으로 이동

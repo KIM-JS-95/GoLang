@@ -8,15 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:schdulesapp/ajax/schedule_repository.dart';
 import 'package:schdulesapp/sub_pages/today_flight.dart';
 
-import '../models/User.dart';
 import '../models/UserProvider.dart';
 import '../models/flight_data.dart';
 import '../utils/r.dart';
 import '../widgets/flights_list_item_widget.dart';
 
 class FlightListPage extends StatefulWidget {
-
-
   const FlightListPage({
     Key? key,
   }) : super(key: key);
@@ -26,54 +23,83 @@ class FlightListPage extends StatefulWidget {
 }
 
 class _FlightListPageState extends State<FlightListPage> {
-  late List<FlightData> flightDatas;
+  late Future<List<FlightData>> flightDatas;
 
   @override
   void initState() {
     super.initState();
-    flightDatas = []; // Initialize flightData as an empty list
-    _loadFlightData();
+    flightDatas = _loadFlightData(); // Assign the future to flightDatas
   }
 
-  Future<void> _loadFlightData() async {
-    UserProvider userProvider = Provider.of<UserProvider>(context);
+  Future<List<FlightData>> _loadFlightData() async {
+    UserProvider userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
-      final data = await ScheduleRepository.getAllSchedules(userProvider.user.auth);
-      setState(() {
-        flightDatas = data;
-      });
+      return ScheduleRepository.getAllSchedules(userProvider.user.auth); // Return the future directly
     } catch (error) {
       // Handle error
       print('Error loading flight data: $error');
+      return []; // Return an empty list in case of error
     }
   }
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: flightDatas.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: R.tertiaryColor.withOpacity(0.5),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide(color: R.tertiaryColor),
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Expanded(
+        child: FutureBuilder<List<FlightData>>(
+          future: flightDatas, // Use the flightDatas future
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'Error(E001): ${snapshot.error}',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black54,
                     ),
                   ),
-                  onPressed: () {
-                    TodayFlight(flightData: flightDatas[index]);
-                    }, /// 리스트 클릭시 뷰 페이지로 이동
-                  child: FlightsListItemWidget(
-                      flightData: flightDatas[index]),
+                );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No flight data available',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black54,
+                    ),
+                  ),
+                );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: R.tertiaryColor.withOpacity(0.5),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        side: BorderSide(color: R.tertiaryColor),
+                      ),
+                    ),
+                    onPressed: () {
+                      TodayFlight(flightData: snapshot.data![index]);
+                    },
+                    child: FlightsListItemWidget(
+                        flightData: snapshot.data![index]),
+                  ),
                 ),
-              ),
-            ),
-          ),
-        ],
-      );
+              );
+            }
+          },
+        ),
+      ),
+    ],
+  );
 }
+

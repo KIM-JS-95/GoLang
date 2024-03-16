@@ -1,3 +1,4 @@
+
 class FlightData {
   final String departureShort;
   final String departure;
@@ -11,26 +12,29 @@ class FlightData {
   final String activity;
   final String ci;
   final String co;
-
   final String stal;
   final String stab;
 
-  FlightData({
-    required this.departureShort,
-    required this.departure,
-    required this.date,
-    required this.destinationShort,
-    required this.destination,
-    required this.flightNumber,
-    required this.stdl,
-    required this.stdb,
-    required this.stal,
-    required this.stab,
-    required this.id,
-    required this.activity,
-    required this.co,
-    required this.ci
-  });
+  final String lat;
+  final String lon;
+
+  FlightData(
+      {required this.departureShort,
+      required this.departure,
+      required this.date,
+      required this.destinationShort,
+      required this.destination,
+      required this.flightNumber,
+      required this.stdl,
+      required this.stdb,
+      required this.stal,
+      required this.stab,
+      required this.id,
+      required this.activity,
+      required this.co,
+      required this.ci,
+      required this.lat,
+      required this.lon});
 
   FlightData copyWith({
     String? departureShort,
@@ -42,25 +46,31 @@ class FlightData {
     String? duration,
     String? stdl,
     String? stdb,
+    String? stal,
+    String? stab,
     int? id,
     String? activity,
     String? ci,
-    String? co
+    String? co,
+    String? lat,
+    String? lon,
   }) =>
       FlightData(
-        departureShort: departureShort ?? this.departureShort,
-        departure: departure ?? this.departure,
-        date: date ?? this.date,
-        destinationShort: destinationShort ?? this.destinationShort,
-        destination: destination ?? this.destination,
-        flightNumber: flightNumber ?? this.flightNumber,
-        stdl: stdl ?? this.stdl,
-        stdb: stdb ?? this.stdb,
-        stal: stal ?? this.stal,
-        stab: stab ?? this.stab,
-        id: id ?? this.id,
-        activity: activity ?? this.activity,
-        ci: ci ?? this.ci,
-        co: co ?? this.co,
+          departureShort: departureShort ?? this.departureShort,
+          departure: departure ?? this.departure,
+          date: date ?? this.date,
+          destinationShort: destinationShort ?? this.destinationShort,
+          destination: destination ?? this.destination,
+          flightNumber: flightNumber ?? this.flightNumber,
+          stdl: stdl ?? this.stdl,
+          stdb: stdb ?? this.stdb,
+          stal: stal ?? this.stal,
+          stab: stab ?? this.stab,
+          id: id ?? this.id,
+          activity: activity ?? this.activity,
+          ci: ci ?? this.ci,
+          co: co ?? this.co,
+          lat: lat ?? this.lat,
+          lon: lon ?? this.lon
       );
 }

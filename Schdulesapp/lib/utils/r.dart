@@ -10,5 +10,5 @@ class R {
   static Color get tertiaryColor => _tertiaryColor;
 
   static const back_addr = 'http://10.0.2.2:8080';
-
+  static final apiKey = 'ab85aeb8e0825e98eba2066185a578d5';
 }

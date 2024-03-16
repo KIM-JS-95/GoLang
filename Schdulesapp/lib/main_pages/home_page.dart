@@ -9,8 +9,8 @@ import '../utils/r.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget.dart';
 import '../widgets/fade_in_out_widget/fade_in_out_widget_controller.dart';
 import '../widgets/fading_item_list/fading_item_list_controller.dart';
-import 'add_flight_page_controller.dart';
 import 'add_flight_page.dart';
+import 'add_flight_page_controller.dart';
 import 'home_flight_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late final FadeInOutWidgetController _sheetContentFadeInOutController;
   late final FadeInOutWidgetController _headerFadeInOutController;
   late final ValueNotifier<MainPageEnum> _currentMainPage;
-  late final Map<MainPageEnum, Widget> pages;
+  late Map<MainPageEnum, Widget> _pages;
 
   @override
   void initState() {
@@ -40,10 +40,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _initControllers();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _initPages();
+  }
+
   void _initControllers() {
-    _fadingItemListController = FadingItemListController();
     _sheetContentFadeInOutController = FadeInOutWidgetController();
     _headerFadeInOutController = FadeInOutWidgetController();
+    _fadingItemListController = FadingItemListController();
     _sheetAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 600),
@@ -56,16 +62,18 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       },
     );
 
-    UserProvider userProvider = Provider.of<UserProvider>(context);
-
     _currentMainPage = ValueNotifier(MainPageEnum.myFlights);
     _addFlightPageController = AddFlightPageController();
 
-    pages = {
-      MainPageEnum.myFlights: HomeFlightPage(user: userProvider.user),
+  }
+
+  void _initPages() {
+    _pages = {
+      MainPageEnum.myFlights: HomeFlightPage(user: Provider.of<UserProvider>(context).user),
       MainPageEnum.addFlight: AddFlightPage(addFlightPageController: _addFlightPageController),
     };
   }
+
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -115,24 +123,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       );
 
-  Text get _myFlightsTextWidget => Text(
-        "My flights",
-        style: TextStyle(
-          color: R.primaryColor,
-          fontSize: 30.0,
-          fontWeight: FontWeight.w600,
-        ),
-      );
-
-  Text get _addFlightTextWidget => Text(
-        "Add flight",
-        style: TextStyle(
-          color: R.primaryColor,
-          fontSize: 30.0,
-          fontWeight: FontWeight.w600,
-        ),
-      );
-
   Widget get _buildHeader => AnimatedBuilder(
       animation: widget.routeTransitionValue,
       builder: (context, child) {
@@ -143,7 +133,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             children: [
               GestureDetector(
                 onTap: () {
-                  print("123");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -192,7 +181,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           fadeInOutWidgetController: _sheetContentFadeInOutController,
           child: ValueListenableBuilder<MainPageEnum>(
             valueListenable: _currentMainPage,
-            builder: (_, value, __) => pages[value]!,
+            builder: (_, value, __) => _pages[value]!,
           ),
         ),
       );
@@ -236,7 +225,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       _sheetContentFadeInOutController.show();
       _headerFadeInOutController.show();
     });
-    //_addFlightPageController.nextTab();
+    _addFlightPageController.nextTab();
   }
 
   /// 클릭시 동작기능
@@ -257,5 +246,27 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     }
   }
 
+
+  Text get _myFlightsTextWidget => Text(
+    "My flights",
+    style: TextStyle(
+      color: R.primaryColor,
+      fontSize: 30.0,
+      fontWeight: FontWeight.w600,
+    ),
+  );
+
+  Text get _addFlightTextWidget => Text(
+    "Add flight",
+    style: TextStyle(
+      color: R.primaryColor,
+      fontSize: 30.0,
+      fontWeight: FontWeight.w600,
+    ),
+  );
+
+
   bool get _isMyFlightsPage => _currentMainPage.value == MainPageEnum.myFlights;
+
+
 }
