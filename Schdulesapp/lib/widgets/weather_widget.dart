@@ -85,18 +85,18 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Weather: ${_weatherInfo['description']}",
+                            "${_weatherInfo['description']}",
                             style: TextStyle(fontSize: 18.0),
                           ),
-                          SizedBox(width: 10.0),
-                          if (_weatherInfo['icon'].isNotEmpty)
-                            Image.network(
-                              "https://openweathermap.org/img/w/${_weatherInfo['icon']}.png",
-                              width: 50.0,
-                              height: 50.0,
-                            ),
                         ],
                       ),
+                      SizedBox(height: 10.0),
+                      if (_weatherInfo['icon'].isNotEmpty)
+                        Image.network(
+                          "https://openweathermap.org/img/w/${_weatherInfo['icon']}.png",
+                          width: 50.0,
+                          height: 50.0,
+                        ),
                       SizedBox(height: 20.0),
                       Text(
                         "Temperature:${_main['temp']}°C",

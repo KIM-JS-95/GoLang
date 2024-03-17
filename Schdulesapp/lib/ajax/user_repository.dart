@@ -38,7 +38,9 @@ class UserRepository {
       },
       body: jsonEncode(user.toJson()), // user 객체를 JSON으로 인코딩하여 전송
     );
+
     Map<String, String> responseHeaders = response.headers;
+
     if (response.statusCode == 200) {
       // 로그인 성공
       // 서버에서 반환된 데이터를 확인하고 필요에 따라 처리

@@ -17,6 +17,7 @@ class ScheduleRepository {
       },
     );
 
+    print(response.statusCode);
     if (response.statusCode == 200) {
       codes = await getNationCode(Authorization);
 
@@ -61,13 +62,13 @@ class ScheduleRepository {
         'Authorization': Authorization
       },
     );
-
+    print(response.statusCode);
     if (response.statusCode == 200) {
       codes = await getNationCode(Authorization); // 비동기 함수 호출
 
       List<dynamic> jsonList = json.decode(response.body);
-      List<ScheduleModel> s_list =
-      jsonList.map((json) => ScheduleModel.fromJson(json)).toList();
+      List<ScheduleModel> s_list = jsonList.map((json) => ScheduleModel.fromJson(json)).toList();
+
       print(generateFlightsData(jsonList.length, s_list, codes!).toString());
       return generateFlightsData(jsonList.length, s_list, codes!);
     }
@@ -99,10 +100,10 @@ class ScheduleRepository {
         cnt,
             (index) {
           String departureShort = s_list[index].cntFrom.toString();
-          String departure = codes.containsKey(departureShort) ? codes[departureShort]['code'].toString() : 'Unknown'; /// 출발지 코드
+          String departure = codes.containsKey(s_list[index].cntFrom.toString()) ? codes[s_list[index].cntFrom.toString()]['code'].toString() : 'Unknown'; /// 출발지 코드
           String date = s_list[index].date.toString();
           String destinationShort = s_list[index].cntTo.toString();
-          String destination = codes.containsKey(destinationShort) ? codes[destinationShort]['code'].toString() : 'Unknown'; /// 도착지 코드
+          String destination = codes.containsKey(s_list[index].cntTo.toString()) ? codes[s_list[index].cntTo.toString()]['code'].toString() : 'Unknown'; /// 도착지 코드
           String flightNumber = s_list[index].pairing.toString();
           String stal = s_list[index].staL.toString();
           String stab = s_list[index].staB.toString();

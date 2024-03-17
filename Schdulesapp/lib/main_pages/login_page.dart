@@ -110,7 +110,6 @@ class LoginPage extends StatelessWidget {
           // 로그인 성공 여부 확인
           if (loginResult['success']) {
             user.auth=loginResult['token'];
-
             final userProvider = Provider.of<UserProvider>(context, listen: false);
             userProvider.setUser(user);
 
