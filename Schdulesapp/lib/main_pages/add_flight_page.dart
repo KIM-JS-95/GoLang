@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../models/User.dart';
-import '../models/UserProvider.dart';
-import '../sub_pages/available_flights_page.dart';
+import '../sub_pages/darte_flights_page.dart';
 import '../sub_pages/flight_list_page.dart';
 import '../widgets/custom_tab_bar/custom_tab_bar.dart';
 import '../widgets/custom_tab_bar/custom_tab_bar_controller.dart';
@@ -34,7 +31,7 @@ class _AddFlightPageState extends State<AddFlightPage> {
     super.initState();
     _fadeInOutWidgetController = FadeInOutWidgetController();
 
-    _pages = [AvailableFlightsPage(), FlightListPage()];
+    _pages = [DateFlightsPage(), FlightListPage()];  /// 날짜별 & 전체 리스트 페이지
 
     _pageNotifier = ValueNotifier(0);
     _customTabBarController = CustomTabBarController();

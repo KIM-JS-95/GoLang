@@ -37,6 +37,7 @@ class _FlightListPageState extends State<FlightListPage> {
       return ScheduleRepository.getAllSchedules(userProvider.user.auth); // Return the future directly
     } catch (error) {
       // Handle error
+
       print('Error loading flight data: $error');
       return []; // Return an empty list in case of error
     }

@@ -12,7 +12,13 @@ import '../widgets/fading_item_list/fading_item_list_controller.dart';
 import 'add_flight_page.dart';
 import 'add_flight_page_controller.dart';
 import 'home_flight_page.dart';
-
+/*
+* title: 메인페이지
+* HomePage.dart
+* > home_flight_page.dart (get Today Schedule)
+*   > today_flight.dart > 일정 페이지 보여줌
+*
+* */
 class HomePage extends StatefulWidget {
   final Animation routeTransitionValue;
 

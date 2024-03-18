@@ -65,29 +65,6 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmailField() {
-    final emailFieldData = HardCodedData.loginPageFieldsData[0];
-    return CustomTextField(
-      controller: emailFieldData.controller,
-      labelText: emailFieldData.label,
-      prefixIcon: emailFieldData.icon,
-      mainColor: R.secondaryColor,
-      secondaryColor: R.tertiaryColor,
-    );
-  }
-
-  Widget _buildPasswordField() {
-    final passwordFieldData = HardCodedData.loginPageFieldsData[0];
-    return CustomTextField(
-      controller: passwordFieldData.controller,
-      labelText: passwordFieldData.label,
-      prefixIcon: passwordFieldData.icon,
-      mainColor: R.secondaryColor,
-      secondaryColor: R.tertiaryColor,
-      isTextObscure: true,
-    );
-  }
-
   Widget _buildLoginButton(BuildContext context) => FilledButton(
         style: FilledButton.styleFrom(
           backgroundColor: R.secondaryColor,
@@ -104,16 +81,14 @@ class LoginPage extends StatelessWidget {
           String userid = HardCodedData.loginPageFieldsData[0].controller.text;
           String password = HardCodedData.loginPageFieldsData[1].controller.text;
 
-          User user = User(userid: "001200", password: "123"); /// 테스트
+          User user = User(userid: userid, password: password); /// 테스트
           Map<String, dynamic> loginResult = await UserRepository.login(user);
-
+          print(user.toString());
           // 로그인 성공 여부 확인
           if (loginResult['success']) {
             user.auth=loginResult['token'];
             final userProvider = Provider.of<UserProvider>(context, listen: false);
             userProvider.setUser(user);
-
-            // 로그인 성공 시 홈 화면으로 이동
             _fadeInOutWidgetController.hide();
             Future.delayed(
               const Duration(milliseconds: 500),
@@ -126,11 +101,11 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             );
-          } else {
-            // 로그인 실패 시 사용자에게 알림
+          } else { /// 로그인 실패 시 사용자에게 알림
+            String errorMessage = loginResult['message']; // 로그인 실패 메시지 받아오기
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(loginResult['message']),
+                content: Text(errorMessage),
                 duration: const Duration(seconds: 2),
               ),
             );
@@ -141,6 +116,30 @@ class LoginPage extends StatelessWidget {
           style: TextStyle(color: R.primaryColor, fontWeight: FontWeight.bold),
         ),
       );
+
+  Widget _buildEmailField() {
+    final emailFieldData = HardCodedData.loginPageFieldsData[0];
+    return CustomTextField(
+      controller: emailFieldData.controller,
+      labelText: emailFieldData.label,
+      prefixIcon: emailFieldData.icon,
+      mainColor: R.secondaryColor,
+      secondaryColor: R.tertiaryColor,
+    );
+  }
+
+  Widget _buildPasswordField() {
+    final passwordFieldData = HardCodedData.loginPageFieldsData[1];
+    return CustomTextField(
+      controller: passwordFieldData.controller,
+      labelText: passwordFieldData.label,
+      prefixIcon: passwordFieldData.icon,
+      mainColor: R.secondaryColor,
+      secondaryColor: R.tertiaryColor,
+      isTextObscure: true,
+    );
+  }
+
 
   Widget get _buildSignUpTextWidget => RichText(
         text: TextSpan(
