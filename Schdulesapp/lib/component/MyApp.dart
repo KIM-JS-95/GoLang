@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:schdulesapp/main_pages/home_page.dart';
 
 import '../ajax/upload_ajax.dart';
-import '../models/User.dart';
 import '../models/UserProvider.dart';
 import '../utils/r.dart';
 
@@ -62,7 +61,7 @@ class MyApp extends StatelessWidget {
           ),
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(background: const Color(0xFFFDF5EC))),
-      home: ImageCrop(title: 'Image Cropper Demo'),
+      home: ImageCrop(title: '일정 PDF 편집기'),
     );
   }
 }

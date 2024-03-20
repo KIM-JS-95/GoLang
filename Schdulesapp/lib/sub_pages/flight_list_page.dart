@@ -28,7 +28,7 @@ class _FlightListPageState extends State<FlightListPage> {
   @override
   void initState() {
     super.initState();
-    flightDatas = _loadFlightData(); // Assign the future to flightDatas
+    flightDatas = _loadFlightData(); /// Assign the future to flightDatas
   }
 
   Future<List<FlightData>> _loadFlightData() async {

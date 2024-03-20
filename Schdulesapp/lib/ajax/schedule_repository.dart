@@ -10,7 +10,7 @@ class ScheduleRepository {
     Map<String, dynamic>? codes;
 
     final response = await http.get(
-      Uri.parse('${R.back_addr}/show-schedule'),
+      Uri.parse('${R.back_addr}/showschedule'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': Authorization
@@ -39,7 +39,7 @@ class ScheduleRepository {
           'Authorization': Authorization
         },
         //body: jsonEncode({'dateTime': selectedDay.toIso8601String()}),
-        body: jsonEncode({'dateTime': '15Nov23'}));
+        body: jsonEncode({'dateTime': '15Apr23'}));
     if (response.statusCode == 200) {
       codes = await getNationCode(Authorization);
 
